@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>
+body {
+    margin: 0;
+    background: transparent;
+    font-family: Arial, sans-serif;
+}
+
+.rank-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rank-block {
+    display: flex;
+    flex-direction: column;
+}
+
+.rank-line {
+    display: flex;
+    align-items: center;
+}
+
+#rank {
+    font-size: 32px;
+    font-weight: 900;
+    color: #ff4655;
+    text-transform: uppercase;
+    text-shadow:
+        0 0 3px rgba(255,70,85,0.45),
+        0 0 6px rgba(255,70,85,0.25);
+}
+
+#top {
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+    margin-left: 6px;
+    text-shadow:
+        0 0 2px rgba(255,255,255,0.35);
+}
+
+#rr {
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+    text-shadow:
+        0 0 2px rgba(255,255,255,0.35);
+}
+</style>
+</head>
+
+<body>
+
+<div class="rank-container">
+    <div class="rank-block">
+        <div class="rank-line">
+            <div id="rank">CARGANDO...</div>
+            <div id="top"></div>
+        </div>
+        <div id="rr"></div>
+    </div>
+</div>
+
+<script>
+fetch("https://api.henrikdev.xyz/valorant/v1/mmr/latam/tatOkhz/romi")
+.then(res => res.json())
+.then(d => {
+    document.getElementById("rank").innerText = d.data.currenttierpatched;
+    document.getElementById("rr").innerText = d.data.ranking_in_tier + " RR";
+    if (d.data.leaderboardRank) {
+        document.getElementById("top").innerText = "#" + d.data.leaderboardRank;
+    }
+})
+.catch(() => {
+    document.getElementById("rank").innerText = "SIN DATOS";
+});
+</script>
+
+</body>
+</html>
