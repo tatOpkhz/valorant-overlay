@@ -67,18 +67,37 @@ body {
 </div>
 
 <script>
-fetch("https://api.henrikdev.xyz/valorant/v1/mmr/latam/tatOkhz/romi")
-.then(res => res.json())
-.then(d => {
-    document.getElementById("rank").innerText = d.data.currenttierpatched;
-    document.getElementById("rr").innerText = d.data.ranking_in_tier + " RR";
-    if (d.data.leaderboardRank) {
-        document.getElementById("top").innerText = "#" + d.data.leaderboardRank;
+async function loadRank() {
+    try {
+        const controller = new AbortController();
+        setTimeout(() => controller.abort(), 5000);
+
+        const res = await fetch(
+            "https://api.henrikdev.xyz/valorant/v1/mmr/latam/tatOkhz/romi",
+            { signal: controller.signal }
+        );
+
+        if (!res.ok) throw new Error("API error");
+
+        const d = await res.json();
+
+        document.getElementById("rank").innerText = d.data.currenttierpatched;
+        document.getElementById("rr").innerText = d.data.ranking_in_tier + " RR";
+
+        if (d.data.leaderboardRank) {
+            document.getElementById("top").innerText = "#" + d.data.leaderboardRank;
+        } else {
+            document.getElementById("top").innerText = "";
+        }
+    } catch (e) {
+        document.getElementById("rank").innerText = "SIN DATOS";
+        document.getElementById("rr").innerText = "";
+        document.getElementById("top").innerText = "";
     }
-})
-.catch(() => {
-    document.getElementById("rank").innerText = "SIN DATOS";
-});
+}
+
+loadRank();
+setInterval(loadRank, 60000);
 </script>
 
 </body>
